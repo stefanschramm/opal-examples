@@ -1,0 +1,63 @@
+IMPLEMENTATION Bedingungen
+
+IMPORT Nat COMPLETELY
+
+
+-- IF-Abfrage:
+FUN testeZahl: nat -> bool
+DEF testeZahl(x) ==
+	IF x > 10 THEN true
+	ELSE false
+	FI
+
+
+-- da ">" auch nur eine Funktion ist, die bool zurueckgibt, kann in diesem Fall direkt geschrieben werden:
+FUN testeZahlVereinfacht: nat -> bool
+DEF testeZahlVereinfacht(x) == x > 10
+
+
+-- Auf Gleichheit testen:
+FUN testeZahlGleich: nat -> bool
+DEF testeZahlGleich(x) ==
+	IF x = 10 THEN true
+	ELSE false
+	FI
+
+-- Entgegen der Gewohnheiten von allen Programmiersprachen muss zum vergleichen tatsaechlich "=" benutzt werden, waehrend Definitionen mit "==" gemacht werden. Also genau umgekehrt.
+
+
+-- Dijkstra-IF:
+FUN testeZahlDijkstra: nat -> bool
+DEF testeZahlDijkstra(x) ==
+	IF x > 10 THEN true
+	IF x <= 10 THEN false
+	FI
+
+-- Wichtig:
+-- 1. Es sollten alle Faelle die auftreten koennen abgedeckt sein. Ansonsten kommt es waehrend der Laufzeit zu einem Fehler, falls ein nichtdefinierter Fall auftritt.
+-- 2. Es sollten keine "Ueberlappungen" existieren. Also nicht x >= 10 und x <= 10 gleichzeitig verwenden, da das Verhalten in diesem Fall unbestimmt ist (auch wenn in der Praxis scheinbar immer der zuerst auftretende Fall gewaehlt wird).
+
+
+-- Verschachteltes IF:
+FUN testeZahlSchachtel: nat -> bool
+DEF testeZahlSchachtel(x) ==
+	IF x > 10 THEN
+		IF x > 20 THEN
+			false -- x ist groesser als 20
+		ELSE
+			true -- x ist zwischen 10 und 21
+		FI
+	ELSE
+		false -- x ist kleiner gleich 10
+	FI
+
+
+-- Logische Verknuepfungen (and, or):
+FUN testeZahlLogisch: nat -> bool
+DEF testeZahlLogisch(x) ==
+	IF x > 10 and x < 21 THEN true
+	ELSE false
+	FI
+
+-- Bei komplexeren Bedingungen sollten Klammern gesetzt werden, dass klar ist was wie verknuepft wird.
+

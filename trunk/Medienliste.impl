@@ -1,0 +1,150 @@
+IMPLEMENTATION Medienliste
+
+IMPORT Nat COMPLETELY
+IMPORT Medium COMPLETELY
+IMPORT Seq[medium] COMPLETELY
+
+IMPORT SeqReduce COMPLETELY
+IMPORT SeqFilter COMPLETELY
+IMPORT SeqMap COMPLETELY
+
+IMPORT Seq[nat] COMPLETELY
+IMPORT SeqZip COMPLETELY
+
+
+-- Die Medienliste soll eine Art Datenbank sein, in der Medien (siehe Medium.impl) gespeichert sind.
+-- Dies koennen CDs und Buecher sein.
+
+
+FUN testliste: seq[medium]
+DEF testliste ==
+	buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!)) ::
+	buch(("Understanding the Linux Kernel"), ("Daniel P. Bovet and Marco Cesati"), ("942"!)) ::
+	cd(("Opium fuers Volk"), ("Die Toten Hosen"), ("18"!), ("62"!)) ::
+	buch(("Das Kapital, Bd.1: Der Produktionsprozess des Kapitals"), ("Karl Marx"), ("955"!)) ::
+	<>
+
+
+-- Mittels rekursiver Funktion zaehlen, wie viele Buecher enthalten sind:
+
+FUN zaehleBuecher: seq[medium] -> nat
+DEF zaehleBuecher(<>) == 0
+DEF zaehleBuecher(erstes :: rest) ==
+	IF buch?(erstes) THEN 1 + zaehleBuecher(rest)
+	ELSE zaehleBuecher(rest)
+	FI
+
+-- Medienliste.impl>e zaehleBuecher(testliste)
+-- 3
+
+
+-- Verallgemeinerung der Zaehlfunktion mittels HOF (Higher Order Functions), dass sie fuer Buecher und CDs benutzt werden kann:
+-- Als zweites Argument muss nun eine Funktion uebergeben werden, die medium entgegen nimmt und bool zurueckliefert.
+-- Fuer diesen Fall koennen direkt die Diskriminatorfunktionen buch? und cd? (mit Fragezeichen!) verwendet werden.
+
+FUN zaehleVariante: seq[medium] ** (medium -> bool) -> nat
+DEF zaehleVariante(<>, f) == 0
+DEF zaehleVariante(erstes :: rest, f) ==
+	IF f(erstes) THEN 1 + zaehleBuecher(rest)
+	ELSE zaehleBuecher(rest)
+	FI
+
+-- Medienliste.impl>e zaehleVariante(testliste, buch?)
+-- 3
+-- Medienliste.impl>e zaehleVariante(testliste, cd?)
+-- 1
+
+
+-- Eine weitere Moeglichkeit ist die Umsetzung der Sache mittels reduce.
+-- Dann muss die Rekursion nicht selbst geschrieben werden:
+
+FUN zaehleVarianteReduce: seq[medium] ** (medium -> bool) -> nat
+DEF zaehleVarianteReduce(liste, f) == reduce((\\m, anzahl . anzahl + (IF f(m) THEN 1 ELSE 0 FI)), 0, liste)
+
+-- Der Aufruf bleibt gleich:
+-- Medienliste.impl>e zaehleVarianteReduce(testliste, buch?)
+-- 3
+
+-- Reduce nimmt als erstes Argument eine Funktion entgegen,
+-- 	die ein medium und den aktuellen Zaehlwert entgegen nimmt und den neuen Zaehlwert zurueckliefert
+-- sowie den Startzaehlwert (0) und die Liste aller Medien und gibt die Zaehlwert zurueck.
+-- Je nachdem was mit reduce gemacht werden soll muss es entsprechend sinnvoll angepasst werden.
+-- Meistens wird reduce benutzt, um aus einer Liste einen einzelnen Wert zu erhalten.
+-- Die Moeglichkeiten sind aber ziemlich unbegrenzt, es liesse sich z.B. innerhalb der uebergebenen Funktion auch wieder eine neue Liste bauen.
+-- [Uebungsaufgabe: Schreibe eine Funktion, die die Seiten aller Buecher addiert.]
+-- [Uebungsaufgabe: Schreibe eine Funktion, die das Buch mit den meisten Seiten zurueckgibt. - Wie wird der Fall abgefangen, wenn kein Buch in der Liste enthalten ist?]
+
+
+-- Nun ein Beispiel fuer Filter:
+
+FUN filterDickeBuecher: seq[medium] -> seq[medium]
+DEF filterDickeBuecher(liste) == filter((\\m . IF buch?(m) THEN (IF seiten(m) > ("500"!) THEN true ELSE false FI) ELSE false FI), liste)
+
+-- Es wird eine neue Liste erzeugt, in der nur die Elemente enthalten sind, auf die diese Filterfunktion zutrifft:
+-- Das Medium ist ein Buch und hat mehr als 500 Seiten. Die Filterfunktion ist vom Typ (medium -> bool).
+
+-- Medienliste.impl>e filterVariante(testliste, buch?)
+-- <Buch:
+--   Titel: Understanding the Linux Kernel
+--   Autor: Daniel P. Bovet and Marco Cesati
+--   Seiten: 942
+-- ,Buch:
+--   Titel: Das Kapital, Bd.1: Der Produktionsprozess des Kapitals
+--   Autor: Karl Marx
+--   Seiten: 955
+-- >
+
+-- Die etwas kryptische Schreibweise mit dem verschachtelten IF muss scheinbar aufgrund der strikten Auswertung so sein, da es sonst einen Fehler gibt, weil die Selektorfunktion seiten() nicht auf die Variante cd angewendet werden kann.
+-- [Uebungsaufgabe: Wie koennte die Funktion zaehleVariante mit filter und #-Funktion für Sequenzen realisiert werden?]
+
+
+-- Ein gutes Beispiel fuer das Listenfunktional Map zu finden ist hier etwas schwierig, da sich die CDs von den Buechern ziemlich unterscheiden, und deswegen schlecht eine Operation auf alle gleichermassen angewendet werden kann.
+
+-- Dennoch ein Versuch:
+
+FUN halbiereMedien: seq[medium] -> seq[medium]
+DEF halbiereMedien(liste) == map(halbiereMedium, liste)
+
+FUN halbiereMedium: medium -> medium
+DEF halbiereMedium(buch(titel, autor, seiten)) ==
+	buch(titel, autor, seiten / 2)
+DEF halbiereMedium(cd(titel, interpret, tracks, laenge)) ==
+	cd(titel, interpret, tracks / 2, laenge / 2)
+
+-- Aufruf z.B. mit:
+-- Medienliste.impl>e halbiereMedien(testliste)
+-- oder
+-- Medienliste.impl>e halbiereMedien(filterDickeBuecher(testliste))
+
+-- map nimmt sich also jedes Element aus liste vor, wendet halbiereMedium darauf an, und gibt eine neue Liste mit den Elementen, die halbiereMedium zurueckgab, zurueck.
+-- Bei halbiereMedium wird diesmal die Pattern-Matching Schreibweise verwendet, um zu erkennen, um was fuer eine Variante es sich handelt.
+-- (Es haette auch mit IF funktioniert, dann muessten jedoch beim Zusammenbauen des neuen Mediums immer wieder aufwaendig die Selektoren benutzt werden.)
+-- Bei Buechern wird ein Buch mit halbierter Seitenanzahl zurueckgegeben und bei CDs wird die Track-Anzahl und die Laenge halbiert.
+
+-- Die Rueckgabeliste von map muss nicht vom gleichen Typ sein, wie die entgegengenommene Liste.
+-- Da jede Medium-Variante (CDs und Buecher) einen Titel haben (und diese Eigenschaft gleich heisst), geht das hier:
+-- Eine Liste aller Titel zurueckgeben:
+
+FUN alleTitel: seq[medium] -> seq[denotation]
+DEF alleTitel(liste) == map((\\m . titel(m)), liste)
+
+-- Medienliste.impl>e alleTitel(testliste)
+-- <Funktionale Programmierung in OPAL, HASKELL und GOFER,Understanding the Linux Kernel,Opium fuers Volk,Das Kapital, Bd.1: Der Produktionsprozess des Kapitals>
+
+
+-- Da Zip auf der Medienliste wirklich weit hergeholt ist, hier nur ein Beispiel mit nat-Listen:
+
+FUN zipTest: seq[nat] ** seq[nat] -> seq[nat]
+DEF zipTest(liste1, liste2) == zip(\\x, y . x + 2 * y)(liste1, liste2)
+
+-- Medienliste.impl>e zipTest((1 :: 2 :: 3 :: <>), (4 :: 5 :: 6 :: <>))
+-- <9,12,15>
+
+-- Jedes Element wird mit dem korrespondierenden der anderen Liste verknuepft.
+-- In diesem Fall wird dem ersten zwei mal das zweite aufaddiert.
+-- Wenn die Listen unterschiedlich gross sind meldet OPAL einen Fehler.
+
+-- Zu beachten ist hier die Currying-Schreibweise beim zip-Aufruf.
+-- Bei den anderen Listenfunktionalen ist die "herkoemmliche" und die Currying-Schreibweise moeglich. Bei zip nur Currying.
+-- siehe http://user.cs.tu-berlin.de/~opal/ocs/doc/html/BibOpalicaManual/Subsystem_Sequences_Proper.html
+-- Fuer Map, Filter und Reduce git es ausserdem lustige einbuchstabige ASCII-Aliase - siehe auch Bibliotheca Opalica.

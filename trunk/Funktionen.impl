@@ -1,0 +1,45 @@
+IMPLEMENTATION Funktionen
+
+-- Datentyp "nat" und dazugehoerige Funktionen (*, + etc.)  importieren
+IMPORT Nat COMPLETELY
+-- Weitere wichtige Datentypen sind int, real und denotation. Die Datentypen selbst sind kleingeschrieben, befinden sich aber immer in den Strukturen mit grossem Anfangsbuchstaben.
+
+
+-- "gewohnte" Schreibweise:
+FUN ersterTest: nat ** nat -> nat
+DEF ersterTest(a, b) == 2 * (a + b)
+
+
+-- Lambda-Schreibweise:
+FUN zweiterTest: nat ** nat -> nat
+DEF zweiterTest == \\a,b.(2 * (a + b))
+
+
+-- Deklaration mittels Infix-Schreibweise:
+FUN dritterTest: nat ** nat -> nat
+DEF a dritterTest b == 2 * (a + b)
+-- (egal wie die Funktionen deklariert sind - sie koennen immer als Prefix und Postfix aufgerufen werden; Funktionen mit zwei Argumenten zudem als Infix)
+
+
+-- ausfuehren in Oasys:
+-- >a Funktionen
+-- loading Funktionen.sign
+-- loading Funktionen.impl
+-- >f Funktionen.impl
+-- Funktionen.impl>e ersterTest(3,5)
+-- starting evaluator process
+-- 16
+-- Funktionen.impl>e zweiterTest(3,5)
+-- 16
+-- Aufruf von Funktionen mittels Infix-Notation:
+-- Funktionen.impl>e (3 ersterTest 5)
+-- 16
+-- Funktionen.impl>e (3 zweiterTest 5)
+-- 16
+-- Funktionen.impl>e (3,5)ersterTest
+-- 16
+-- Funktionen.impl>e (3,5)zweiterTest
+-- 16
+-- Funktionen.impl>e dritterTest(3,5)
+-- 16
+

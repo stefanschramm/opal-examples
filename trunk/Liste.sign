@@ -1,0 +1,9 @@
+SIGNATURE Liste
+
+IMPORT Nat ONLY nat
+
+TYPE liste == liste(first: nat, rest: liste)
+              empty
+
+FUN ` : liste -> denotation
+

@@ -1,0 +1,29 @@
+IMPLEMENTATION LetInWhere
+
+IMPORT Real COMPLETELY
+
+-- Zylindervolumen mit LET ... IN:
+FUN zylinderVolumenLet: real ** real -> real
+DEF zylinderVolumenLet(radius, hoehe) ==
+	LET
+		grundflaeche == pi * radius * radius -- pi ist uebrigens in der Struktur Real enthalten
+	IN
+		grundflaeche * hoehe
+
+
+-- Zylindervolumen mit WHERE:
+FUN zylinderVolumenWhere: real ** real -> real
+DEF zylinderVolumenWhere(radius, hoehe) ==
+		grundflaeche * hoehe
+	WHERE
+		grundflaeche == pi * radius * radius -- pi ist uebrigens in der Struktur Real enthalten
+
+
+-- Wenn an dieser Stelle ein Lambda-Ausdruck verwendet werden soll, muessen zusaetzliche Klammern eingefuegt werden, da es sich wegen der Bindungssstaerke sonst falsch verhaelt:
+
+FUN zylinderVolumenWhereLambda: real ** real -> real
+DEF zylinderVolumenWhereLambda == \\radius, hoehe . (grundflaeche * hoehe WHERE grundflaeche == pi * radius * radius)
+
+-- Statt wie hier nur "grundflaeche" koennten bei LET ... IN und WHERE auch mehrere Bezeichner definiert werden.
+-- Generell macht LET ... IN oder WHERE bei Formeln Sinn, in denen der gleiche Ausdruck mehrmals vorkommt um Schreibarbeit zu sparen.
+
