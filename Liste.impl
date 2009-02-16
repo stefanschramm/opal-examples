@@ -1,0 +1,67 @@
+IMPLEMENTATION Liste
+
+IMPORT Nat COMPLETELY
+IMPORT NatConv COMPLETELY
+IMPORT Denotation COMPLETELY
+
+IMPORT Seq[denotation] COMPLETELY
+
+
+-- Beispiel fuer eine eigene Implementierung eines Listen-Datentyps als Beispiel fuer einen rekursiven Datentyp.
+-- Die erste Eigenschaft (first) enthaelt immer den Wert (hier ein nat), die zweite (rest) wiederum eine Liste.
+-- Das Ende der Liste ist dadurch markiert, dass in der zweiten Eigenschaft eine leere Liste (empty) steht.
+-- empty wird also bei Rekursionsdurchlaeufen durch eine Liste benutzt, um festzustellen, ob das Ende erreicht ist.
+
+DATA liste == liste(first: nat, rest: liste)
+              empty
+
+FUN ` : liste -> denotation
+DEF `(liste) ==
+	IF empty?(liste) THEN ""
+	IF liste?(liste) THEN ((first(liste))`) ++ ", " ++ ((rest(liste))`)
+	FI
+
+-- Liste.impl>e liste(3, liste(6, liste(2, liste(2, empty))))
+-- 3, 6, 2, 2,
+-- die Infix-Notation erlaubt es den Klammern-Wust einzudaemmen:
+-- Liste.impl>e (3 liste 6 liste 2 liste 2 liste empty)
+-- 3, 6, 2, 2,
+
+-- Beispiel fuer Rekursion ueber eine Liste:
+
+FUN addiereListe: liste -> nat
+DEF addiereListe(liste) ==
+	IF empty?(liste) THEN 0
+	IF liste?(liste) THEN first(liste) + addiereListe(rest(liste))
+	FI
+
+-- Liste.impl>e addiereListe(liste(3, liste(6, liste(2, liste(2, empty)))))
+-- 13
+
+
+-- In der Biblioteca Opalica sind Listen bereits als parametrisierbare Datenstruktur in "Seq" implementiert:
+-- http://user.cs.tu-berlin.de/~opal/ocs/doc/html/BibOpalicaManual/Seq.html
+-- Der Datentyp heisst "seq" statt "liste".
+-- Statt "empty" wird "<>" verwendet.
+-- Statt dem Konstruktor "liste" wird "::" benutzt.
+-- Die Eigenschaften einer nicht-leeren Liste sind "ft" statt "first" und "rt" statt "rest".
+
+-- Mittels Infix-Notation laesst sich das dann so notieren:
+
+FUN opalListe: seq[denotation]
+DEF opalListe == "eins" :: "zwei" :: "drei" :: "bla bla" :: "usw" :: <>
+
+-- Das "denotation" in den Eckigen Klammern beschreibt, von welchem Datentyp die Liste sein soll.
+-- Es koennte genau so gut seq[nat] sein, oder sogar seq[seq[nat]] (eine Liste von Listen von nats) wenn z.B. eine Matrix dargestellt werden soll.
+-- Wichtig ist, dass beim Importieren der Seq-Struktur (siehe oben) der gewuenschte Datentyp mit angegeben wird.
+
+-- Hier nochmal eine Rekursion ueber eine seq[denotation] mittels Pattern-Matching.
+-- Die Verwendung des Konstruktors "::" innerhalb der Klammer verursacht, dass die Werte der einzelnen Eigenschaften direkt in die Variablen "erstes" und "rest" gezogen werden.
+
+FUN konkatOpalListe: seq[denotation] -> denotation
+DEF konkatOpalListe(<>) == ""
+DEF konkatOpalListe(erstes :: rest) == erstes ++ konkatOpalListe(rest)
+
+-- Liste.impl>e konkatOpalListe(opalListe)
+-- einszweidreibla blausw
+

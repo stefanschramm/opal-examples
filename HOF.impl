@@ -1,0 +1,48 @@
+IMPLEMENTATION HOF
+
+IMPORT Nat COMPLETELY
+
+
+-- Higher Order Functions - Funktionen hoeherer Ordnung
+-- Kurz gesagt geht es darum, dass Funktionen als Argumente fuer Funktionen benutzt werden koennen.
+
+FUN verknuepfe: nat ** nat ** (nat ** nat -> nat) -> nat
+DEF verknuepfe(a, b, funktion) == funktion(a, b) + a + b
+
+FUN verknuepfTestMult: nat
+DEF verknuepfTestMult == verknuepfe(3, 5, *)
+
+FUN verknuepfTestAdd: nat
+DEF verknuepfTestAdd == verknuepfe(3, 5, +)
+
+-- fuehrt zu:
+-- HOF.impl>e verknuepfTestMult
+-- 23
+-- HOF.impl>e verknuepfTestAdd
+-- 16
+
+-- Zu beachten ist der Typ bei der Definition von "verknuepfe". Der Teil in den Klammer beschreibt, von welchem Typ die Funktion sein muss, die uebergeben wird und dann ueber "funktion" aufrufbar ist.
+-- Im Beispiel ist es (nat ** nat -> nat), das trifft z.B. auf die Multiplikation (*) und Addition (+) fuer nat-Zahlen zu. Es lassen dort natuerlich auch eigene Funktionen anwenden:
+
+FUN wirrWarr: nat ** nat -> nat
+DEF wirrWarr(x, y) == x * x * y + x + y
+
+FUN verknuepfTestWirr: nat
+DEF verknuepfTestWirr == verknuepfe(3, 5, wirrWarr)
+
+-- HOF.impl>e verknuepfTestWirr
+-- 61
+
+-- Funktion mittels Lambda-Ausdruck:
+
+FUN verknuepfTestLambda: nat
+DEF verknuepfTestLambda == verknuepfe(3, 5, (\\x, y . x + y))
+
+-- Fuehrt zum gleichen wie "verknuepfTestAdd", nur dass hier die anzuwendende Funktion "inline" mit einem Lambda-Audruck definiert ist. In JavaScript oder Ruby wird sowas wohl "anonyme Funktion" genannt.
+
+-- Die Lambda-Variante eignet sich auch gut zum Testen fuer die Oasys-Kommandozeile. Zu beachten ist hier, dass die Backslashe escaped werden muessen:
+-- HOF.impl>e verknuepfe(3, 5, (\\\\x, y . x + y))
+-- 16
+
+-- Sinnvoll (bzw. eher notwendig) wird die ganze HOF-Geschichte bei Listenfunktionalen oder z.B. Sortier- oder Suchfunktionen, wo eigene Vergleichsoperatoren benutzt werden sollen, so dass die gleiche Funktion mit unterschiedlichen Datentypen arbeiten kann und nicht fuer jeden Typ neu geschrieben werden muss.
+

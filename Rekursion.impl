@@ -1,0 +1,50 @@
+IMPLEMENTATION Rekursion
+
+IMPORT Nat COMPLETELY
+
+
+-- Summenberechnung mit succ() und pred() als repetitive Rekursion:
+FUN summe: nat ** nat -> nat
+DEF summe(a, b) ==
+	IF b = 0 THEN
+		a
+	ELSE
+		summe(succ(a), pred(b))
+	FI
+
+-- In dem Beispiel wird fuer jeden Schritt das erste Argument der Funktion hochgezaehlt und das zweite runter, bis das zweite 0 ist und das erste zurueckgegeben wird.
+-- succ(a) entspricht a + 1 und pred(b) entspricht b - 1
+-- Beim IF-Fall spricht man von der Abbruchbedingung, da in diesem Fall (wenn b bei 0 angekommen ist) die Rekursion aufhoert.
+-- Bei diesem Beispiel handelt es sich um eine repetitive Rekursion, da der Rekursionsaufruf die aeusserste Operation ist.
+
+
+-- Hier die gleiche Funktion mal mit Pattern-Matching Schreibweise statt mit IF:
+FUN summePm: nat ** nat -> nat
+DEF summePm(a, 0) == a
+DEF summePm(a, b) == summe(succ(a), pred(b))
+
+
+-- Das klassische Fibonnacci-Beispiel - baumartige Rekursion:
+FUN fib: nat -> nat
+DEF fib(x) ==
+	IF x = 0 THEN
+		0
+	IF x = 1 THEN
+		1
+	IF x > 1 THEN
+		fib(x - 1) + fib(x - 2)
+	FI
+
+-- Es handelt sich um eine baumartige Rekursion, da im gleichen Ausdruck mehrere rekursive Aufrufe auftreten.
+
+
+-- Als weitere Rekursionstypen gibt es noch:
+-- - lineare Rekursion (wie repetitive, nur dass die aeusserste Operation nicht der Rekursionsaufruf selbst ist)
+-- - geschachtelte Rekursion (als Argumente der Rekursionsaufrufe gibt wiederum Rekursionsaufrufe)
+-- - verschraenkte Rekursion (mehrere Funktionen rufen sich waehrend der Rekursion gegenseitig auf)
+
+
+-- Da OPAL eine funktionale Programmiersprache ist, werden saemtliche Dinge, wo in anderen Sprachen Schleifen (for/foreach/while) benutzt wuerden, als Rekursionen realisiert.
+-- In den obigen Beispielen durchlaeuft die Rekursion immer eine natuerliche Zahl, bis diese 0 wird. Andere Anwendungsfaelle waeren eine Liste (Sequence) zu durchlaufen und von vorne "abzuschneiden", bis sie leer ist.
+-- Meistens ist es sinnvoll sich als erstes ueber den Rekursionsabbruch Gedanken zu machen. Ausserdem sollte sichergestellt werden, dass die Rekursion immer terminiert, also aufhoert und der Rekursionsabbruch wirklich immer eintritt.
+

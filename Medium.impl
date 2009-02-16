@@ -1,0 +1,72 @@
+IMPLEMENTATION Medium
+
+IMPORT Nat COMPLETELY
+IMPORT NatConv COMPLETELY -- noetig fuer Backtick-Funktion um nat in denotation umzuwandeln beim anzeigen eines Mediums
+IMPORT Denotation COMPLETELY
+
+-- Es wird in verschiedene "Datentyp-Typen" unterschieden.
+-- Vom Grundsaetzlichen her werden sie jedoch alle gleich definiert, es ist nur eine Benennungs-Sache.
+-- Summentypen / Varianten ( = von einem Datentyp gibt es mehrere Varianten, diese koennen unterschiedliche Eigenschaften besitzen)
+-- Produkttypen ( = Typen mit nur einer Variante)
+-- Aufzaehlungstypen ( = Typen mit mehreren Varianten, aber ohne Eigenschaften)
+-- Rekursive Datenstrukturen ( = Typen, die als Eigenschaft einen Typ von sich selbst haben)
+
+DATA medium == buch(titel: denotation, autor: denotation, seiten: nat)
+               cd(titel: denotation, interpret: denotation, tracks: nat, laenge: nat)
+
+-- Bei der Datenstruktur "medium" handelt es sich um einen Summentyp, da es mehrere Varianten eines Mediums gibt.
+-- Das Prinzip aehnelt ein bisschen dem von abgeleiteten Funktionen (also Vererbung) in Objektorientierter Programmierung - scheint mir jedoch etwas starrer.
+-- Diese Definition erzeugt folgende induzierte Signatur:
+-- Name des Typs:
+-- SORT medium
+-- Konstruktorfunktionen:
+-- FUN buch: denotation ** denotation ** nat -> medium
+-- FUN cd: denotation ** denotation ** nat ** nat -> medium
+-- Selektorfunktionen:
+-- FUN titel: medium -> denotation
+-- FUN autor: medium -> denotation
+-- FUN seiten: medium -> nat
+-- FUN interpret: medium -> denotation
+-- FUN tracks: medium -> nat
+-- FUN laenge: medium -> nat
+-- Diskriminatorfunktionen:
+-- FUN buch?: medium -> bool
+-- FUN cd?: medium -> bool
+
+-- Ueber die Konstruktorfunktion lassen sich sozusagen Elemente des Datentyps anlegen.
+-- Beispiel:
+-- Medium.impl>e buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!))
+-- oder
+-- Medium.impl>e cd(("Opium fuers Volk"), ("Die Toten Hosen"), ("18"!), ("62"!))
+
+-- Die Selektorfunktionen dienen dazu, die Eigenschaften des Elements auszulesen. Bei Summentypen duerfen nur die Selektoren verwendet werden, die auch zur entsprechenden Variante gehoeren.
+-- Ggf. muss eine IF-Abfrage gemacht werden (siehe Beispiel unten bei Backtick-Funktion).
+-- Medium.impl>e seiten(buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!)))
+-- 300
+
+-- Mit den Diskriminatorfunktionen, kann (wichtig bei Summentypen) geprueft werden, ob ein Element von einer bestimmten Variante ist. Fuer jeden Konstruktor eines Typs (also fuer jede Variante) gibt es einen Diskriminator.
+-- Medium.impl>e buch?(buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!)))
+-- true
+-- Medium.impl>e cd?(buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!)))
+-- false
+
+
+-- Backtick-Funktion:
+-- Damit beim Auswerten von Ausdruecken mit eigenen Datentstrukturen etwas angezeigt werden kann, wird mit ihr definiert, wie die Ausgabe aussehen soll. Ansonsten wuerde nur "<some>" angezeigt werden.
+-- Damit das funktioniert muss die Funktion in der SIGNATURE (.sign-Datei) definiert sein.
+
+FUN ` : medium -> denotation
+DEF `(medium) ==
+	IF buch?(medium) THEN
+		"Buch:\n  Titel: " ++ titel(medium) ++ "\n  Autor: " ++ autor(medium) ++ "\n  Seiten: " ++ ((seiten(medium))`) ++ " \n"
+	IF cd?(medium) THEN
+		"CD:\n  Titel: " ++ titel(medium) ++ "\n  Interpret: " ++ interpret(medium) ++ "\n  Tracks: " ++ ((tracks(medium))`) ++ " \n  Laenge: " ++ ((laenge(medium))`) ++ " min\n"
+	FI
+
+-- Damit wird z.B. folgende Ausgabe erzeugt:
+-- Medium.impl>e buch(("Funktionale Programmierung in OPAL, HASKELL und GOFER"), ("Peter Pepper"), ("300"!))
+-- Buch:
+--  Titel: Funktionale Programmierung in OPAL, HASKELL und GOFER
+--  Autor: Peter Pepper
+--  Seiten: 300
+
