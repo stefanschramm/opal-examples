@@ -1,0 +1,93 @@
+IMPLEMENTATION Sortieren
+
+IMPORT Nat COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+IMPORT SeqReduce COMPLETELY
+IMPORT SeqFilter COMPLETELY
+
+FUN testliste: seq[nat]
+DEF testliste == 3 :: 6 :: 7 :: 1 :: 2 :: 0 :: 9 :: 8 :: 4 :: 2 :: <>
+
+
+-- Insertionsort:
+
+FUN insertionsort: seq[nat] -> seq[nat]
+DEF insertionsort(<>) == <>
+DEF insertionsort(x :: rest) == insert(x, insertionsort(rest))
+
+FUN insert: nat ** seq[nat] -> seq[nat]
+DEF insert(neu, <>) == neu :: <>
+DEF insert(neu, erstes :: rest) ==
+	IF neu < erstes THEN neu :: erstes :: rest
+	ELSE erstes :: insert(neu, rest)
+	FI
+
+
+-- Selectionsort:
+
+FUN selectionsort: seq[nat] -> seq[nat]
+DEF selectionsort(<>) == <>
+DEF selectionsort(liste) ==
+	LET
+		minimum == reduce(min, ft(liste), liste)
+		rest == helpRemove(minimum, liste)
+	IN
+		minimum :: selectionsort(rest)
+
+FUN helpRemove: nat ** seq[nat] -> seq[nat]
+DEF helpRemove(_, <>) == <>
+DEF helpRemove(x, erstes :: rest) ==
+	IF x = erstes THEN rest
+	ELSE erstes :: helpRemove(x, rest)
+	FI
+
+-- Das Minimum der Liste wird mit Hilfe des reduce-Listenfunktionals ermittelt.
+-- Es waere auch moeglich eine Hilfsfunktion zu schreiben, die die Liste rekursiv durchgeht, und das kleinste Element ermittelt.
+-- Fuer helpRemove kann nicht filter() verwendet werden, da filter() bei mehrfachen Vorkommen alle rausschmeissen wuerde statt nur die erste Fundstelle.
+
+
+-- Mergesort:
+
+FUN mergesort: seq[nat] -> seq[nat]
+DEF mergesort(<>) == <>
+DEF mergesort(letztes :: <>) == letztes :: <>
+DEF mergesort(liste) ==
+	LET
+		(links, rechts) == split(#(liste)/2, liste) -- Liste in zwei gleich grosse Teillisten teilen
+	IN
+		merge(mergesort(links), mergesort(rechts))
+
+FUN merge: seq[nat] ** seq[nat] -> seq[nat]
+DEF merge(<>, <>) == <>
+DEF merge(l, <>) == l
+DEF merge(<>, r) == r
+DEF merge(l, r) ==
+	IF ft(l) <= ft(r) THEN ft(l) :: merge(rt(l), r)
+	ELSE ft(r) :: merge(l, rt(r))
+	FI
+
+
+-- Quicksort:
+
+FUN quicksort: seq[nat] -> seq[nat]
+DEF quicksort(<>) == <>
+DEF quicksort(liste) ==
+	LET
+		pivot == ft(liste)
+		kleiner == filter((\\x . x < pivot), liste)
+		gleich == filter((\\x . x = pivot), liste)
+		groesser == filter((\\x . x > pivot), liste)
+	IN
+		quicksort(kleiner) ++ gleich ++ quicksort(groesser)
+
+
+-- Alle Sortierverfahren liefern das gleiche Ergebnis:
+-- Sortieren.impl>e insertionsort(testliste)
+-- <0,1,2,2,3,4,6,7,8,9>
+-- Sortieren.impl>e selectionsort(testliste)
+-- <0,1,2,2,3,4,6,7,8,9>
+-- Sortieren.impl>e mergesort(testliste)
+-- <0,1,2,2,3,4,6,7,8,9>
+-- Sortieren.impl>e quicksort(testliste)
+-- <0,1,2,2,3,4,6,7,8,9>
+
