@@ -26,6 +26,16 @@ DEF testeZahlGleich(x) ==
 -- Entgegen der Gewohnheiten von allen Programmiersprachen muss zum vergleichen tatsaechlich "=" benutzt werden, waehrend Definitionen mit "==" gemacht werden. Also genau umgekehrt.
 
 
+-- Negation wird mit Tilde (~) gemacht:
+FUN testeZahlNichtGleich: nat -> bool
+DEF testeZahlNichtGleich(x) ==
+	IF ~(x = 10) THEN true
+	ELSE false
+	FI
+
+-- ungleich gibt es auch: |=
+
+
 -- Dijkstra-IF:
 FUN testeZahlDijkstra: nat -> bool
 DEF testeZahlDijkstra(x) ==
