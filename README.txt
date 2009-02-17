@@ -17,8 +17,9 @@ Beispielstrukturen:
 - Listenfunktionale (TODO)
 - Sortieren (Insertionsort, Selectionsort, Quicksort, Mergesort, Listenfunktionale filter und reduce)
 - PatternMatching (TODO)
-- Fehlerbehandlung (Behandlung von Fehlerfaellen mit Option - TODO)
+- Fehlerbehandlung (Behandlung von Fehlerfaellen mit "Option"-Datentyp - TODO)
 - Medienliste (Zusammenfassung verschiedener Themen: Datenstrukturen, Listen, Rekursion, Listenfunktionale)
+- Plotter (Spielerei - Funktionen als ASCII-Darstellung im Terminal plotten)
 
 
 Wichtige Links:

@@ -1,0 +1,28 @@
+IMPLEMENTATION Plotter
+
+IMPORT Real COMPLETELY
+IMPORT Nat COMPLETELY
+IMPORT RealConv COMPLETELY
+IMPORT Denotation COMPLETELY
+
+FUN plot: (real -> real) ** real ** real ** real -> denotation
+DEF plot(f, start, end, step) ==
+	IF start < end THEN plotDot(asNat(f(start))) ++ "\n" ++ plot(f, start + step, end, step)
+	ELSE ""
+	FI
+
+FUN plotDot: nat -> denotation
+DEF plotDot(x) ==
+	IF x > 0 THEN " " ++ plotDot(x - 1)
+	ELSE "*"
+	FI
+
+-- Beispielaufrufe:
+-- x^2:
+-- Plotter.impl>e plot(\\\\x . x * x, 1, 6, ("0.2"!))
+-- sin(x):
+-- Plotter.impl>e plot(\\\\x . sin(x) * 30 + 30, 1, 10, ("0.2"!))
+
+-- Da der Plotter von sich aus keine Anpassung an die Terminalgroesse macht und die Funktionen auch nicht zerrt oder streckt muss es innerhalb der zu plottenden Funktion selbst gemacht werden.
+-- Hier fuer Sinus also eine Amplitude von 60 Zeichen (Werte von -30 bis +30) und die um +30 verschoben, dass alle Werte im Positiven Bereich liegen.
+

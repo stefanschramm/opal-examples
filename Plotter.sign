@@ -1,0 +1,6 @@
+SIGNATURE Plotter
+
+IMPORT Real ONLY real
+
+FUN plot: (real -> real) ** real ** real ** real -> denotation
+
