@@ -7,7 +7,7 @@ Die .sign-Dateien sind daher meistens leer oder nur so minimal wie fuer die Beis
 
 Beispielstrukturen:
 
-- Funktionen
+- Funktionen (TODO: Overloading Beispiel)
 - Bedingungen
 - LetInWhere
 - Rekursion
@@ -17,6 +17,7 @@ Beispielstrukturen:
 - Listenfunktionale (TODO)
 - Sortieren (Insertionsort, Selectionsort, Quicksort, Mergesort, Listenfunktionale filter und reduce)
 - PatternMatching (TODO)
+- Fehlerbehandlung (Behandlung von Fehlerfaellen mit Option - TODO)
 - Medienliste (Zusammenfassung verschiedener Themen: Datenstrukturen, Listen, Rekursion, Listenfunktionale)
 
 
