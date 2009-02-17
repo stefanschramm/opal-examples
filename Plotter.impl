@@ -19,7 +19,7 @@ DEF plotDot(x) ==
 
 -- Beispielaufrufe:
 -- x^2:
--- Plotter.impl>e plot(\\\\x . x * x, 1, 6, ("0.2"!))
+-- Plotter.impl>e plot(\\\\x . x * x, ("-6"!), 6, ("0.4"!))
 -- sin(x):
 -- Plotter.impl>e plot(\\\\x . sin(x) * 30 + 30, 1, 10, ("0.2"!))
 
