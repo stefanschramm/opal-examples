@@ -80,6 +80,8 @@ DEF quicksort(liste) ==
 	IN
 		quicksort(kleiner) ++ gleich ++ quicksort(groesser)
 
+-- Was hier beim filter-Aufruf im Lambda-Ausdruck deutlich wird: Das ausserhalb des Lambda-Ausdrucks definierte "pivot" ist bis in den Lambda-Ausdruck hinein gueltig - das Scope (der Sichtbarkeitsbereich) reicht hinein.
+
 
 -- Alle Sortierverfahren liefern das gleiche Ergebnis:
 -- Sortieren.impl>e insertionsort(testliste)
