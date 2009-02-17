@@ -2,7 +2,8 @@ SIGNATURE Medium
 
 IMPORT Nat ONLY nat
 
-TYPE medium == buch(titel: denotation, autor: denotation, seiten: nat)
-               cd(titel: denotation, interpret: denotation, tracks: nat, laenge: nat)
+TYPE medium ==
+	buch(titel: denotation, autor: denotation, seiten: nat)
+	cd(titel: denotation, interpret: denotation, tracks: nat, laenge: nat)
 
 FUN ` : medium -> denotation

@@ -12,8 +12,9 @@ IMPORT Seq[denotation] COMPLETELY
 -- Das Ende der Liste ist dadurch markiert, dass in der zweiten Eigenschaft eine leere Liste (empty) steht.
 -- empty wird also bei Rekursionsdurchlaeufen durch eine Liste benutzt, um festzustellen, ob das Ende erreicht ist.
 
-DATA liste == liste(first: nat, rest: liste)
-              empty
+DATA liste ==
+	liste(first: nat, rest: liste)
+	empty
 
 FUN ` : liste -> denotation
 DEF `(liste) ==
