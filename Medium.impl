@@ -11,8 +11,9 @@ IMPORT Denotation COMPLETELY
 -- Aufzaehlungstypen ( = Typen mit mehreren Varianten, aber ohne Eigenschaften)
 -- Rekursive Datenstrukturen ( = Typen, die als Eigenschaft einen Typ von sich selbst haben)
 
-DATA medium == buch(titel: denotation, autor: denotation, seiten: nat)
-               cd(titel: denotation, interpret: denotation, tracks: nat, laenge: nat)
+DATA medium ==
+	buch(titel: denotation, autor: denotation, seiten: nat)
+	cd(titel: denotation, interpret: denotation, tracks: nat, laenge: nat)
 
 -- Bei der Datenstruktur "medium" handelt es sich um einen Summentyp, da es mehrere Varianten eines Mediums gibt.
 -- Das Prinzip aehnelt ein bisschen dem von abgeleiteten Funktionen (also Vererbung) in Objektorientierter Programmierung - scheint mir jedoch etwas starrer.

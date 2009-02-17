@@ -4,7 +4,7 @@ IMPORT Nat COMPLETELY
 
 
 -- Higher Order Functions - Funktionen hoeherer Ordnung
--- Kurz gesagt geht es darum, dass Funktionen als Argumente fuer Funktionen benutzt werden koennen.
+-- Kurz gesagt geht es darum, dass Funktionen als Argumente fuer oder als Rueckgabewerte von Funktionen benutzt werden koennen.
 
 FUN verknuepfe: nat ** nat ** (nat ** nat -> nat) -> nat
 DEF verknuepfe(a, b, funktion) == funktion(a, b) + a + b
