@@ -152,4 +152,5 @@ DEF liste(baum(l,k,r)) == liste(l) ++ liste(r)
 -- <1: Katja,3: Tom,5: Alf,9: Rosa>
 
 -- Das Umwandeln in eine Liste aehnelt der Baumtraversierung. Von Traversierung wird jedoch scheinbar nur gesprochen, wenn auch die Knoten im Baum mit umgewandelt werden (bzw. ein Baum, bei dem es keine expliziten Blaetter gibt, sondern die Daten in den Knoten sind).
+-- Normalerweise wuerde der Suchbaum in einer parametrisierbaren Struktur definiert sein, dass er nicht nur fuer Personen, sondern beliebige Strukturen benutzt werden kann.
 
