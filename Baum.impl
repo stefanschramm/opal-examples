@@ -1,0 +1,155 @@
+IMPLEMENTATION Baum
+
+IMPORT Nat COMPLETELY
+IMPORT Denotation COMPLETELY
+IMPORT NatConv COMPLETELY
+IMPORT Option[person] COMPLETELY
+IMPORT Seq[person] COMPLETELY
+
+
+-- Hier sollen in einem Suchbaum Personen mit IDs und Namen gespeichert werden.
+-- Ziel ist, dass mit Hilfe des Baums dann schnell nach IDs gesucht werden kann und der Personendatensatz gefunden wird.
+
+-- Zunaechst der Produkttyp person:
+
+DATA person == person(id: nat, name: denotation)
+
+FUN ` : person -> denotation
+DEF `(p) == ((id(p))`) ++ ": " ++ name(p)
+
+
+-- Rekursive Datenstruktur Baum:
+
+DATA baum ==
+	leer
+	blatt(data: person)
+	baum(links: baum, key: nat, rechts: baum)
+
+-- Hinweis: In welcher Reihenfolge die Parameter bei den Binaerbaeumen sind wird unterschiedlich gehandhabt. Manchmal ist key das erste Argument statt in der Mitte.
+
+
+-- Die Backtick-Funktion ist rekursiv definiert - jeweils fuer die drei Varianten des baum-Typs.
+FUN ` : baum -> denotation
+DEF `(leer) == "leer"
+DEF `(blatt(p)) == "(" ++ `(p) ++ ")"
+DEF `(baum(l, k, r)) == "(" ++ `(l) ++ " " ++ `(k)  ++ " " ++  `(r)  ++ ")"
+
+
+-- Bei einem Suchbaum sind alle Elemente des linken Unterbaums kleiner oder gleich des aktuellen Knotens und die rechts groesser.
+-- Beim Einfuegen wird auch nach den drei Varianten unterschieden (leer/Blatt/Baum).
+-- Wenn es kein leerer Baum ist, muss entschieden werden, ob in den linken oder rechten Zweig eingefuegt werden soll, so dass er entsprechend geordnet bleibt.
+
+FUN insert: baum ** person -> baum
+DEF insert(leer, p) == blatt(p)
+DEF insert(blatt(d), p) ==
+	IF id(d) <= id(p) THEN baum(blatt(d), id(d), blatt(p))
+	ELSE baum(blatt(p), id(p), blatt(d))
+	FI
+DEF insert(baum(l, k, r), p) ==
+	IF id(p) <= k THEN baum(insert(l, p), k, r)
+	ELSE baum(l, k, insert(r, p))
+	FI
+
+-- Testbaum wird mittels Infixnotation zuammengebaut
+FUN testbaum: baum
+DEF testbaum ==
+	leer insert person(5, "Alf") insert person(9, "Rosa") insert person(3, "Tom") insert person(1, "Katja")
+
+-- Aufruf:
+-- Baum.impl>e testbaum
+-- ((((1: Katja) 1 (3: Tom)) 3 (5: Alf)) 5 (9: Rosa))
+
+
+-- Suchen im Baum:
+
+FUN suche: baum ** nat -> option[person]
+DEF suche(leer, _) == nil
+DEF suche(blatt(d), n) ==
+	IF id(d) = n THEN avail(d)
+	ELSE nil
+	FI
+DEF suche(baum(l, k, r), n) ==
+	IF n <= k THEN suche(l, n)
+	ELSE suche(r, n)
+	FI
+
+-- Aufruf:
+-- Baum.impl>e suche(testbaum, 1)
+-- [1: Katja]
+-- Baum.impl>e suche(testbaum, 2)
+-- nil
+-- Baum.impl>e suche(testbaum, 3)
+-- [3: Tom]
+-- Baum.impl>e suche(testbaum, 9)
+-- [9: Rosa]
+
+
+-- Hoehe des Baums ermitteln:
+
+FUN hoehe: baum -> nat
+DEF hoehe(empty) == 0
+DEF hoehe(blatt(_)) == 1
+DEF hoehe(baum(l, _, r)) == 1 + max(hoehe(l), hoehe(r))
+
+-- Baum.impl>e hoehe(testbaum)
+-- 4
+-- Baum.impl>e hoehe(links(testbaum))
+-- 3
+-- Baum.impl>e hoehe(rechts(testbaum))
+-- 1
+
+
+-- Der bisherige Baum war nicht balanciert. Das fuehrt dazu, dass die Suche im schlechtesten Fall - wenn die Elemente in einer unguenstigen Reihenfolge hinzugefuegt wurden - linearen Aufwand hat und dadurch nicht besser als bei einer Liste ist.
+-- Um einen balancierten Binaerbaum (AVL-Baum) zu erreichen, muss nach jedem Einfuegevorgang sichergestellt werden, dass sich die Hoehe des linken Zweigs nicht um mehr als 1 von der des rechten unterscheidet.
+-- Damit diese Invariante eingehalten wird, wird direkt nach dem einfuegen die folgende repair-Funktion angewendet, die ggf. die Zweige entsprechend verschiebt.
+
+FUN repair: baum -> baum
+DEF repair(baum(l, k, r)) ==
+	IF hoehe(l) > hoehe(r) + 1 THEN baum(links(l), key(l), baum(rechts(l), k, r))
+	IF hoehe(l) < hoehe(r) - 1 THEN baum(baum(l, k, links(r)), key(r), rechts(r))
+	ELSE baum(l, k, r)
+	FI
+
+-- (Es ist empfehlenswert sich das zum Verstaendnis mal aufzuzeichnen, da das Zusammenbauen hier nicht so uebersichtlich ist.)
+
+FUN insertAvl: baum ** person -> baum
+DEF insertAvl(leer, p) == blatt(p)
+DEF insertAvl(blatt(d), p) ==
+	IF id(d) <= id(p) THEN baum(blatt(d), id(d), blatt(p))
+	ELSE baum(blatt(p), id(p), blatt(d))
+	FI
+DEF insertAvl(baum(l, k, r), p) ==
+	IF id(p) <= k THEN repair(baum(insertAvl(l, p), k, r))
+	ELSE repair(baum(l, k, insertAvl(r, p)))
+	FI
+
+FUN testbaumAvl: baum
+DEF testbaumAvl ==
+	leer insertAvl person(5, "Alf") insertAvl person(9, "Rosa") insertAvl person(3, "Tom") insertAvl person(1, "Katja")
+
+-- Hier der unbalancierte und der balancierte Baum im Vergleich:
+-- Baum.impl>e testbaum
+-- ((((1: Katja) 1 (3: Tom)) 3 (5: Alf)) 5 (9: Rosa))
+-- Baum.impl>e testbaumAvl
+-- (((1: Katja) 1 (3: Tom)) 3 ((5: Alf) 5 (9: Rosa)))
+
+-- Bei einer geraden Anzahl an Blaettern wie in diesem Beispiel ist der Baum vollstaendig ausbalanciert (symmetrisch).
+-- Wuerde noch eine delete-Funktion implementiert werden, so muesste diese auch repair aufrufen, damit die Invariante erhalten bleibt.
+-- Das Suchen funktioniert im Baum natuerlich noch genau so.
+
+
+-- Im Suchbaum gespeicherte Daten als (sortierte) Liste zurueckgeben:
+
+FUN liste: baum -> seq[person]
+DEF liste(leer) == <>
+DEF liste(blatt(p)) == p :: <>
+DEF liste(baum(l,k,r)) == liste(l) ++ liste(r)
+
+-- Beim unbalancierten Baum und beim AVL-Baum ergibt liste das gleiche Ergebnis:
+-- Baum.impl>e liste(testbaum)
+-- <1: Katja,3: Tom,5: Alf,9: Rosa>
+-- Baum.impl>e liste(testbaumAvl)
+-- <1: Katja,3: Tom,5: Alf,9: Rosa>
+
+-- Das Umwandeln in eine Liste aehnelt der Baumtraversierung. Von Traversierung wird jedoch scheinbar nur gesprochen, wenn auch die Knoten im Baum mit umgewandelt werden (bzw. ein Baum, bei dem es keine expliziten Blaetter gibt, sondern die Daten in den Knoten sind).
+

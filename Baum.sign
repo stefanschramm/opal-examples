@@ -1,0 +1,15 @@
+SIGNATURE Baum
+
+IMPORT Nat ONLY nat
+
+TYPE person == person(id: nat, name: denotation)
+
+FUN ` : person -> denotation
+
+TYPE baum ==
+        leer
+        blatt(data: person)
+        baum(links: baum, key: nat, rechts: baum)
+
+FUN ` : baum -> denotation
+
