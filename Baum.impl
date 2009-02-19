@@ -110,7 +110,7 @@ DEF repair(baum(l, k, r)) ==
 	ELSE baum(l, k, r)
 	FI
 
--- (Es ist empfehlenswert sich das zum Verstaendnis mal aufzuzeichnen, da das Zusammenbauen hier nicht so uebersichtlich ist.)
+-- (Es ist empfehlenswert sich das zum Verstaendnis mal aufzuzeichnen, da das Zusammenbauen hier im Quelltext nicht sonderlich uebersichtlich ist.)
 
 FUN insertAvl: baum ** person -> baum
 DEF insertAvl(leer, p) == blatt(p)
@@ -153,4 +153,8 @@ DEF liste(baum(l,k,r)) == liste(l) ++ liste(r)
 
 -- Das Umwandeln in eine Liste aehnelt der Baumtraversierung. Von Traversierung wird jedoch scheinbar nur gesprochen, wenn auch die Knoten im Baum mit umgewandelt werden (bzw. ein Baum, bei dem es keine expliziten Blaetter gibt, sondern die Daten in den Knoten sind).
 -- Normalerweise wuerde der Suchbaum in einer parametrisierbaren Struktur definiert sein, dass er nicht nur fuer Personen, sondern beliebige Strukturen benutzt werden kann.
+
+-- Funktionale (reduce, map, filter, zip) lassen sich im Prinzip auch fuer Baeume implementieren.
+-- Es ist jedoch nich immer einleuchtend, welches hier welche Bedeutung hat und muesste daher genau definiert werden.
+-- Ausserdem koennten sie auf Suchbaeume angewendet evt. die Invariante zerstoeren.
 
