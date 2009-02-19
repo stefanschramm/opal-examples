@@ -95,7 +95,7 @@ DEF filterDickeBuecher(liste) == filter((\\m . IF buch?(m) THEN (IF seiten(m) > 
 -- >
 
 -- Die etwas kryptische Schreibweise mit dem verschachtelten IF muss scheinbar aufgrund der strikten Auswertung so sein, da es sonst einen Fehler gibt, weil die Selektorfunktion seiten() nicht auf die Variante cd angewendet werden kann.
--- [Uebungsaufgabe: Wie koennte die Funktion zaehleVariante mit filter und #-Funktion für Sequenzen realisiert werden?]
+-- [Uebungsaufgabe: Wie koennte die Funktion zaehleVariante mit filter und #-Funktion fuer Sequenzen realisiert werden?]
 
 
 -- Ein gutes Beispiel fuer das Listenfunktional Map zu finden ist hier etwas schwierig, da sich die CDs von den Buechern ziemlich unterscheiden, und deswegen schlecht eine Operation auf alle gleichermassen angewendet werden kann.
