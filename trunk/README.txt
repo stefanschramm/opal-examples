@@ -19,6 +19,7 @@ Beispielstrukturen:
 - PatternMatching (TODO)
 - Fehlerbehandlung (Behandlung von Fehlerfaellen mit "Option"-Datentyp - TODO)
 - Medienliste (Zusammenfassung verschiedener Themen: Datenstrukturen, Listen, Rekursion, Listenfunktionale)
+- Baum (Suchbaum, AVL-Baum)
 - Plotter (Spielerei - Funktionen als ASCII-Darstellung im Terminal plotten)
 
 
