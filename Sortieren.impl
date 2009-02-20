@@ -83,7 +83,36 @@ DEF quicksort(liste) ==
 -- Was hier beim filter-Aufruf im Lambda-Ausdruck deutlich wird: Das ausserhalb des Lambda-Ausdrucks definierte "pivot" ist bis in den Lambda-Ausdruck hinein gueltig - das Scope (der Sichtbarkeitsbereich) reicht hinein.
 
 
--- Alle Sortierverfahren liefern das gleiche Ergebnis:
+-- Bubblesort:
+-- (dies ist kein Musterbeispiel... es ist unklar, ob es sich eleganter ausdruecken laesst)
+
+FUN bubblesort: seq[nat] -> seq[nat]
+DEF bubblesort(liste) ==
+	LET
+		(bubbled, swapped)  == bubble(liste, false)
+	IN
+		IF swapped THEN bubblesort(bubbled)
+		ELSE liste -- es wurde nichts mehr vertauscht - nicht weiter blubbern
+		FI
+
+FUN bubble: seq[nat] ** bool -> seq[nat] ** bool
+DEF bubble(<>, swapped) == (<>, swapped)
+DEF bubble(a :: <>, swapped) == (a :: <>, swapped)
+DEF bubble(a :: b :: rest, swapped) ==
+		IF a <= b THEN
+			LET
+				(bubbledrest, swappedrest) == bubble(b :: rest, swapped)
+			IN
+				(a :: bubbledrest, swapped or swappedrest)
+		ELSE
+			LET
+				(bubbledrest, swappedrest) == bubble(a :: rest, swapped)
+			IN
+				(b :: bubbledrest, true)
+		FI
+
+
+-- Alle Sortierverfahren liefern (gluecklicherweise) das gleiche Ergebnis:
 -- Sortieren.impl>e insertionsort(testliste)
 -- <0,1,2,2,3,4,6,7,8,9>
 -- Sortieren.impl>e selectionsort(testliste)
@@ -91,5 +120,7 @@ DEF quicksort(liste) ==
 -- Sortieren.impl>e mergesort(testliste)
 -- <0,1,2,2,3,4,6,7,8,9>
 -- Sortieren.impl>e quicksort(testliste)
+-- <0,1,2,2,3,4,6,7,8,9>
+-- Sortieren.impl>e bubblesort(testliste)
 -- <0,1,2,2,3,4,6,7,8,9>
 
