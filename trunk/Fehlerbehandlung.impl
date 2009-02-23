@@ -1,0 +1,60 @@
+IMPLEMENTATION Fehlerbehandlung
+
+IMPORT Nat COMPLETELY
+IMPORT NatConv COMPLETELY
+IMPORT Denotation COMPLETELY
+IMPORT Seq[person] COMPLETELY
+IMPORT Option[person] COMPLETELY
+
+-- In diesem Beispiel geht es um die Behandlung von Fehlern mit dem Option-Datentyp (in der Literatur oder in den Vorlesungen manchmal auch Maybe bezeichnet):
+-- http://user.cs.tu-berlin.de/~opal/ocs/doc/html/BibOpalicaManual/Option.html
+
+-- Bei etlichen Funktionen kann es zu Situationen kommen, in denen die Funktion keinen sinnvollen Wert zurueckgeben kann:
+-- Soll z.B. die Funktion findePerson als Argument eine Zahl entgegennehmen und aus einer Liste von Personen jene Person mit der entsprechenden ID zurueckgeben, so waere die Deklaration eigentlich:
+-- FUN findePerson: nat ** seq[person] -> person
+-- Wenn die gesuchte Person jedoch nicht in der Liste enthalten ist, ist unklar, was passieren soll.
+-- Um dies zu umgehen wird der Summentyp Option benutzt. Er kapselt sozusagen den Rueckgabewert der Funktion und die Deklaration sieht nun so aus:
+-- FUN findePerson: nat ** seq[person] -> option[person]
+-- Tritt innerhalb von findePerson ein Fehler auf (Person nicht gefunden), so wird die Option-Variante nil zurueckgegeben.
+-- War der Funktionsaufruf erfolgreich, wird die Variante avail zurueckgegeben. 
+-- Die aufrufende Funktion kann mittels der Diskriminatorfunktionen nil? und avail? pruefen, ob der Aufruf erfolgreich war.
+-- Die Variante avail besitzt die Eigenschaft cont, in der sich dann der eigentliche Rueckgabewert (hier die person) befindet.
+
+DATA person == person(id: nat, name: denotation)
+
+FUN ` : person -> denotation
+DEF `(p) == ((id(p))`) ++ ": " ++ name(p)
+
+FUN testListe: seq[person]
+DEF testListe == person(1, "Alice") :: person(2, "Bob") :: <>
+
+FUN findePerson: nat ** seq[person] -> option[person]
+DEF findePerson(_, <>) == nil
+DEF findePerson(n, erstes :: rest) ==
+	IF id(erstes) = n THEN avail(erstes)
+	ELSE findePerson(n, rest)
+	FI
+
+-- Aufruf:
+-- Fehlerbehandlung.impl>e findePerson(2, testListe)
+-- [2: Bob]
+-- Fehlerbehandlung.impl>e findePerson(3, testListe)
+-- nil
+
+-- Hier ein Beispiel, wie auf die zurueckgegebenen Werte zugegriffen werden kann:
+
+FUN sucheName: nat -> denotation
+DEF sucheName(n) ==
+	LET
+		ergebnis == findePerson(n, testListe)
+	IN
+		IF avail?(ergebnis) THEN "Name der gesuchten Person: " ++ name(cont(ergebnis))
+		IF nil?(ergebnis) THEN "Person wurde nicht gefunden."
+		FI
+
+-- Aufruf:
+-- Fehlerbehandlung.impl>e sucheName(1)
+-- Name der gesuchten Person: Alice
+-- Fehlerbehandlung.impl>e sucheName(3)
+-- Person wurde nicht gefunden.
+

@@ -1,0 +1,8 @@
+SIGNATURE Fehlerbehandlung
+
+IMPORT Nat ONLY nat
+
+TYPE person == person(id: nat, name: denotation)
+
+FUN ` : person -> denotation
+
