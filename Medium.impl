@@ -1,7 +1,7 @@
 IMPLEMENTATION Medium
 
 IMPORT Nat COMPLETELY
-IMPORT NatConv COMPLETELY -- noetig fuer Backtick-Funktion um nat in denotation umzuwandeln beim anzeigen eines Mediums
+IMPORT NatConv COMPLETELY -- noetig fuer Backtick-Funktion um nat in denotation umzuwandeln beim Anzeigen eines Mediums
 IMPORT Denotation COMPLETELY
 
 -- Es wird in verschiedene "Datentyp-Typen" unterschieden.
