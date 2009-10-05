@@ -21,7 +21,7 @@ DEF summe(a, b) ==
 -- Hier die gleiche Funktion mal mit Pattern-Matching Schreibweise statt mit IF:
 FUN summePm: nat ** nat -> nat
 DEF summePm(a, 0) == a
-DEF summePm(a, b) == summe(succ(a), pred(b))
+DEF summePm(a, b) == summePm(succ(a), pred(b))
 
 
 -- Das klassische Fibonnacci-Beispiel - baumartige Rekursion:
