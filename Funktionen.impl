@@ -15,7 +15,7 @@ FUN zweiterTest: nat ** nat -> nat
 DEF zweiterTest == \\a,b.(2 * (a + b))
 
 
--- Deklaration mittels Infix-Schreibweise:
+-- Definition mittels Infix-Schreibweise:
 FUN dritterTest: nat ** nat -> nat
 DEF a dritterTest b == 2 * (a + b)
 -- (egal wie die Funktionen deklariert sind - sie koennen immer als Prefix und Postfix aufgerufen werden; Funktionen mit zwei Argumenten zudem als Infix)
