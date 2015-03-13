@@ -1,7 +1,7 @@
 opal-examples
 =============
 
-Eine Sammlung von kommentierten Beispielquelltexten für die an der TU-Berlin entwickelten und im Kurs MPGI1 verwendeten funktionalen Programmiersprache OPAL.
+Eine Sammlung von kommentierten Beispielquelltexten für die an der TU Berlin entwickelten und im Kurs MPGI1 verwendeten funktionalen Programmiersprache OPAL.
 
 A collection of code examples for the functional programming language OPAL used at the Technical University of Berlin. - Since this project mainly targets a german-speaking audience all comments and also function names in the examples are in German.
 
