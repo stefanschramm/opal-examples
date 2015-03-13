@@ -33,9 +33,9 @@ Beispielstrukturen
 Wichtige Links
 --------------
 
-- OPAL-Projektseite: http://user.cs.tu-berlin.de/~opal/
-- Bibliotheca Opalica: http://user.cs.tu-berlin.de/~opal/ocs/doc/html/BibOpalicaManual/
-- Freitagsrunde zu OPAL mit FAQ und Installationshinweisen: https://wiki.freitagsrunde.org/Opal
+* OPAL-Projektseite: http://projects.uebb.tu-berlin.de/opal/trac
+* Bibliotheca Opalica: https://projects.uebb.tu-berlin.de/opal/dosfop/2.4/bibopalicaman/
+* Freitagsrunde zu OPAL mit FAQ und Installationshinweisen: https://wiki.freitagsrunde.org/Opal
 
 
 Korrektur- und Erweiterungsvorschlaege zur Beispielsammlung bitte gerne an: mail AT stefanschramm PUNKT net. 
