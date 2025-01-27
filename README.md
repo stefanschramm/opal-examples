@@ -14,23 +14,27 @@ Es wird davon ausgegangen, dass die Beispiele immer im Kontext der .impl-Datei a
 Beispielstrukturen
 ------------------
 
-* Funktionen (TODO: Overloading Beispiel)
+* Funktionen
 * Bedingungen
 * LetInWhere
 * Rekursion
-* HOF (TODO: Currying)
+* HOF
 * Medium (Datenstrukturen)
 * Listen
-* Listenfunktionale (TODO)
 * Sortieren (Insertionsort, Selectionsort, Quicksort, Mergesort, Listenfunktionale filter und reduce)
-* PatternMatching (TODO)
 * Fehlerbehandlung (Behandlung von Fehlerfällen mit "Option"-Datentyp)
 * Medienliste (Zusammenfassung verschiedener Themen: Datenstrukturen, Listen, Rekursion, Listenfunktionale)
 * Baum (Suchbaum, AVL-Baum)
 * Plotter (Spielerei - Funktionen als ASCII-Darstellung im Terminal plotten)
 
-OPAL-Installation auf Ubuntu
-----------------------------
+OPAL-Installation
+-----------------
+
+### Docker-Container (2025-01-27)
+
+Das letzte Release, auf dem sich OPAL direkt kompilieren ließ, ist Debian 9 (Stretch). Unter https://github.com/stefanschramm/opal-container ist ein Dockerfile bereitgestellt, welches eine entsprechende Umgebung zur Verfügung stellt.
+
+### Installation unter Ubuntu (veraltet)
 
 Die offizielle Installationsanleitung für OPAL gibt es hier: http://projects.uebb.tu-berlin.de/opal/trac/wiki/InstallationGerman
 
@@ -71,12 +75,11 @@ Beispiele mittels Git herunterladen und ausprobieren:
 Links
 -----
 
-* OPAL-Projektseite: http://projects.uebb.tu-berlin.de/opal/trac
-* Bibliotheca Opalica: https://projects.uebb.tu-berlin.de/opal/dosfop/2.4/bibopalicaman/
-* Freitagsrunde zu OPAL mit FAQ und Installationshinweisen: https://wiki.freitagsrunde.org/Opal
-
-
-Korrektur- und Erweiterungsvorschläge zur Beispielsammlung bitte gerne an: mail AT stefanschramm PUNKT net. 
+* [Bibliotheca Opalica](https://stefanschramm.net/dev/opal-archive/doc/html/BibOpalicaManual/)
+* [Userguide zum OPAL Compilation System](https://stefanschramm.net/dev/opal-archive/doc/pdf/userguide.pdf)
+* [Dokumentation zu Oasys](https://stefanschramm.net/dev/opal-archive/doc/pdf/OasysManual.pdf)
+* [Tutorial (Jürgen Exner)](https://stefanschramm.net/dev/opal-archive/doc/pdf/tutorial.pdf)
+* [Freitagsrunde zu OPAL mit FAQ und Installationshinweisen](https://wiki.freitagsrunde.org/Opal)
 
 
 Die aktuelle Fassung dieser Sammlung findet sich im Repository auf: https://github.com/stefanschramm/opal-examples
